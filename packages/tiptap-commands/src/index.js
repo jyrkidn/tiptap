@@ -51,6 +51,7 @@ import splitToDefaultListItem from './commands/splitToDefaultListItem'
 import toggleBlockType from './commands/toggleBlockType'
 import toggleList from './commands/toggleList'
 import toggleWrap from './commands/toggleWrap'
+import updateIndentLevel from './commands/updateIndentLevel'
 import updateMark from './commands/updateMark'
 
 export {
@@ -105,5 +106,6 @@ export {
   toggleBlockType,
   toggleList,
   toggleWrap,
+  updateIndentLevel,
   updateMark,
 }

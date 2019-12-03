@@ -21,6 +21,7 @@ export default class Paragraph extends Node {
     return {
       attrs: {
         align: { default: null },
+        indent: { default: null },
       },
       content: 'inline*',
       group: 'block',

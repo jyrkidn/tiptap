@@ -33,6 +33,7 @@ export default class Heading extends Node {
     return {
       attrs: {
         align: { default: null },
+        indent: { default: null },
         level: { default: 1 },
       },
       content: 'inline*',

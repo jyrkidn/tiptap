@@ -1,6 +1,7 @@
 export default function getParagraphDOM(node) {
   const {
     align,
+    indent,
   } = node.attrs
 
   const attrs = {}
@@ -12,6 +13,10 @@ export default function getParagraphDOM(node) {
 
   if (style) {
     attrs.style = style
+  }
+
+  if (indent) {
+    attrs[ATTRIBUTE_INDENT] = Number(indent)
   }
 
   return ['p', attrs, 0]

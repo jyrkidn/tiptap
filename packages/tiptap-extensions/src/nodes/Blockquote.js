@@ -23,6 +23,7 @@ export default class Blockquote extends Node {
     return {
       attrs: {
         align: { default: null },
+        indent: { default: null },
       },
       content: 'block*',
       group: 'block',
