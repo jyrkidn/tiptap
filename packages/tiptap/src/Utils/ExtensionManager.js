@@ -51,7 +51,7 @@ export default class ExtensionManager {
 
   get nodeExtensions() {
     return this.extensions
-      .filter(extension => extension.type === 'extension' && extension.name === 'alignment')
+      .filter(extension => extension.type === 'extension' && ['alignment', 'indent'].includes(extension.name))
       .reduce((extensions, { name, schema }) => ({
         ...extensions,
         [name]: schema,
