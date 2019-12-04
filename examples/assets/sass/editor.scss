@@ -120,5 +120,26 @@
       cursor: col-resize;
     }
 
+    [data-indent="1"] {
+      margin-left: 12pt;
+    }
+    [data-indent="2"] {
+      margin-left: 24pt;
+    }
+    [data-indent="3"] {
+      margin-left: 36pt;
+    }
+    [data-indent="4"] {
+      margin-left: 48pt;
+    }
+    [data-indent="5"] {
+      margin-left: 60pt;
+    }
+    [data-indent="6"] {
+      margin-left: 72pt;
+    }
+    [data-indent="7"] {
+      margin-left: 84pt;
+    }
   }
 }

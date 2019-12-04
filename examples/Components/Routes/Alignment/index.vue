@@ -109,6 +109,20 @@
 
         <button
           class="menubar__button"
+          @click="commands.indent(1)"
+        >
+          <icon name="indent_in" />
+        </button>
+
+        <button
+          class="menubar__button"
+          @click="commands.indent(-1)"
+        >
+          <icon name="indent_out" />
+        </button>
+
+        <button
+          class="menubar__button"
           :class="{ 'is-active': isActive.bullet_list() }"
           @click="commands.bullet_list"
         >
