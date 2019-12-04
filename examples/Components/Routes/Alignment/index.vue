@@ -252,6 +252,7 @@ import {
   Strike,
   Underline,
   Alignment,
+  Indent,
   History,
   Table,
   TableHeader,
@@ -285,6 +286,7 @@ export default {
           new Strike(),
           new Underline(),
           new Alignment(),
+          new Indent(),
           new History(),
           new Table({
             resizable: true,

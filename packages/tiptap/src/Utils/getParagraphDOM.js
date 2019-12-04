@@ -1,3 +1,5 @@
+import { ATTRIBUTE_INDENT } from './indent'
+
 export default function getParagraphDOM(node) {
   const {
     align,
