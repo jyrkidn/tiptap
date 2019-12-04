@@ -1,10 +1,12 @@
 import { AllSelection, TextSelection } from 'prosemirror-state'
+import { liftListItem, sinkListItem } from 'prosemirror-schema-list'
+import { findParentNode } from 'prosemirror-utils'
 import {
   minMax,
   MIN_INDENT_LEVEL,
   MAX_INDENT_LEVEL,
 } from 'tiptap/Utils'
-import { nodeEqualsType } from 'tiptap-utils'
+import { nodeEqualsType, nodeIsList, nodeIsTodoList } from 'tiptap-utils'
 
 function setNodeIndentMarkup(tr, pos, delta) {
   if (!tr.doc) {
@@ -32,8 +34,14 @@ function setNodeIndentMarkup(tr, pos, delta) {
   return tr.setNodeMarkup(pos, node.type, nodeAttrs, node.marks)
 }
 
+function toggleListItemIndentation(listItem, delta) {
+  return delta > 0
+    ? sinkListItem(listItem)
+    : liftListItem(listItem)
+}
+
 export default function updateIndentLevel(type, delta) {
-  return (state, dispatch) => {
+  return (state, dispatch, view) => {
     const {
       doc,
       schema,
@@ -48,7 +56,28 @@ export default function updateIndentLevel(type, delta) {
       return false
     }
 
-    const { from, to } = selection
+    const {
+      from,
+      to,
+      $from,
+      $to,
+    } = selection
+    const range = $from.blockRange($to)
+    const parentList = findParentNode(nodeIsList)(selection)
+
+    if (range && range.depth >= 1 && parentList && range.depth - parentList.depth <= 1) {
+
+      if (nodeIsList(parentList.node)) {
+        const listType = nodeIsTodoList(parentList.node)
+          ? schema.nodes.todo_item
+          : schema.nodes.list_item
+
+        console.log({ listType });
+
+        return toggleListItemIndentation(listType, delta)(state, dispatch, view)
+      }
+    }
+
     const types = Object.entries(schema.nodes)
       .map(([, value]) => value)
       .filter(node => ['paragraph', 'heading', 'blockquote'].includes(node.name))
@@ -62,12 +91,6 @@ export default function updateIndentLevel(type, delta) {
     doc.nodesBetween(from, to, (node, pos) => {
       if (nodeEqualsType({ node, types })) {
         transformation = setNodeIndentMarkup(tr, pos, delta)
-
-        return false
-      }
-
-      if (listItemType && nodeEqualsType({ node, types: listItemType })) {
-        listNodePoses.push(pos)
 
         return false
       }
