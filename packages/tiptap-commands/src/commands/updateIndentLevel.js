@@ -62,20 +62,19 @@ export default function updateIndentLevel(type, delta) {
       $from,
       $to,
     } = selection
-    const range = $from.blockRange($to)
+    const { depth = 0 } = $from.blockRange($to)
     const parentList = findParentNode(nodeIsList)(selection)
 
-    if (range && range.depth >= 1 && parentList && range.depth - parentList.depth <= 1) {
+    if (depth >= 1
+      && parentList
+      && depth - parentList.depth <= 1
+      && nodeIsList(parentList.node)
+    ) {
+      const listType = nodeIsTodoList(parentList.node)
+        ? schema.nodes.todo_item
+        : schema.nodes.list_item
 
-      if (nodeIsList(parentList.node)) {
-        const listType = nodeIsTodoList(parentList.node)
-          ? schema.nodes.todo_item
-          : schema.nodes.list_item
-
-        console.log({ listType });
-
-        return toggleListItemIndentation(listType, delta)(state, dispatch, view)
-      }
+      return toggleListItemIndentation(listType, delta)(state, dispatch, view)
     }
 
     const types = Object.entries(schema.nodes)
