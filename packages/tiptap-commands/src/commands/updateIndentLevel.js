@@ -21,11 +21,8 @@ function setNodeIndentMarkup(tr, pos, delta) {
     return tr
   }
 
-  const indent = minMax(
-    MIN_INDENT_LEVEL,
-    (node.attrs.indent || 0) + delta,
-    MAX_INDENT_LEVEL
-  )
+  const indentLevel = (node.attrs.indent || MIN_INDENT_LEVEL) + delta
+  const indent = minMax(MIN_INDENT_LEVEL, indentLevel, MAX_INDENT_LEVEL)
 
   if (indent === node.attrs.indent) {
     return tr
@@ -58,13 +55,10 @@ function setListNodeIndent(tr, schema, pos, delta) {
     return tr
   }
 
-  const indentNew = minMax(
-    MIN_INDENT_LEVEL,
-    listNode.attrs.indent + delta,
-    MAX_INDENT_LEVEL
-  )
+  const indentLevel = (listNode.attrs.indent || MIN_INDENT_LEVEL) + delta
+  const indent = minMax(MIN_INDENT_LEVEL, indentLevel, MAX_INDENT_LEVEL)
 
-  if (indentNew === listNode.attrs.indent) {
+  if (indent === listNode.attrs.indent) {
     return tr
   }
 
@@ -85,11 +79,12 @@ function setListNodeIndent(tr, schema, pos, delta) {
     }
 
     if (itemNode.type === listItem) {
-      const listItemNode = listItem.create(
-        itemNode.attrs,
-        itemNode.content,
-        itemNode.marks
-      )
+      const {
+        attrs,
+        content,
+        marks,
+      } = itemNode
+      const listItemNode = listItem.create(attrs, content, marks)
 
       if (itemPos + itemNode.nodeSize <= from) {
         itemsBefore.push(listItemNode)
@@ -108,10 +103,7 @@ function setListNodeIndent(tr, schema, pos, delta) {
   let transformation = tr.delete(pos, pos + listNode.nodeSize)
 
   if (itemsAfter.length) {
-    const listNodeNew = listNode.type.create(
-      listNode.attrs,
-      Fragment.from(itemsAfter)
-    )
+    const listNodeNew = listNode.type.create(listNode.attrs, Fragment.from(itemsAfter))
 
     transformation = transformation.insert(pos, Fragment.from(listNodeNew))
   }
@@ -119,22 +111,16 @@ function setListNodeIndent(tr, schema, pos, delta) {
   if (itemsSelected.length) {
     const listNodeAttrs = {
       ...listNode.attrs,
-      indent: indentNew,
+      indent,
     }
 
-    const listNodeNew = listNode.type.create(
-      listNodeAttrs,
-      Fragment.from(itemsSelected)
-    )
+    const listNodeNew = listNode.type.create(listNodeAttrs, Fragment.from(itemsSelected))
 
     transformation = transformation.insert(pos, Fragment.from(listNodeNew))
   }
 
   if (itemsBefore.length) {
-    const listNodeNew = listNode.type.create(
-      listNode.attrs,
-      Fragment.from(itemsBefore)
-    )
+    const listNodeNew = listNode.type.create(listNode.attrs, Fragment.from(itemsBefore))
 
     transformation = transformation.insert(pos, Fragment.from(listNodeNew))
   }
@@ -164,18 +150,23 @@ export default function updateIndentLevel(type, delta) {
       .filter(node => ['paragraph', 'heading', 'blockquote'].includes(node.name))
     const listItemType = Object.entries(schema.nodes)
       .map(([, value]) => value)
-      .filter(node => ['list_item'].includes(node.name))
+      .find(node => node.name === 'list_item')
+
+    if (!listItemType && !types.length) {
+      return false
+    }
+
     const listNodePoses = []
     let transformation = tr
 
     doc.nodesBetween(from, to, (node, pos) => {
-      if (nodeEqualsType({ node, types })) {
+      if (types.length && nodeEqualsType({ node, types })) {
         transformation = setNodeIndentMarkup(tr, pos, delta)
 
         return false
       }
 
-      if (nodeEqualsType({ node, type: listItemType })) {
+      if (listItemType && nodeEqualsType({ node, types: listItemType })) {
         listNodePoses.push(pos)
 
         return false

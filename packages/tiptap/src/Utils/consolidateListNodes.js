@@ -1,22 +1,23 @@
-import { nodeIsList, nodeIsOrderedList } from 'tiptap-utils';
+import { nodeIsList, nodeIsOrderedList } from 'tiptap-utils'
 
 function setCounterLinked(tr, pos, linked) {
   const node = tr.doc.nodeAt(pos)
-  const currentValue = node.attrs.counterReset || null
-  const nextValue = linked
+  const { counterReset = null } = node.attrs
+  const nextCounterReset = linked
     ? 'none'
     : null
+  let transformation = tr
 
-  if (nextValue !== currentValue) {
+  if (nextCounterReset !== counterReset) {
     const nodeAttrs = {
       ...node.attrs,
-      counterReset: nextValue,
+      counterReset: nextCounterReset,
     }
 
-    tr = tr.setNodeMarkup(pos, node.type, nodeAttrs, node.marks)
+    transformation = transformation.setNodeMarkup(pos, node.type, nodeAttrs, node.marks)
   }
 
-  return tr
+  return transformation
 }
 
 function canJoinListNodes(one, two) {
@@ -75,8 +76,9 @@ function resolveJointInfo(node, pos, prevNode, firstListNodePos) {
  * This means that the 1st and the 3rd lists are linked.
  */
 function linkOrderedListCounters(tr) {
+  const { doc } = tr
   const from = 1
-  const to = tr.doc.nodeSize - 2
+  const to = doc.nodeSize - 2
 
   if (from >= to) {
     return tr
@@ -84,8 +86,9 @@ function linkOrderedListCounters(tr) {
 
   const namedLists = new Set()
   let listsBefore = null
+  let transformation = tr
 
-  tr.doc.nodesBetween(from, to, (node, pos, parentNode) => {
+  doc.nodesBetween(from, to, (node, pos, parentNode) => {
     let willTraverseNodeChildren = true
 
     if (nodeIsList(node)) {
@@ -158,7 +161,7 @@ function linkOrderedListCounters(tr) {
           })
 
           if (counterIsLinked !== undefined) {
-            tr = setCounterLinked(tr, pos, counterIsLinked)
+            transformation = setCounterLinked(transformation, pos, counterIsLinked)
           }
         }
       } else {
@@ -173,7 +176,7 @@ function linkOrderedListCounters(tr) {
           // Island. If so, do not reset the list counter.
           const counterIsLinked = namedLists.has(following)
 
-          tr = setCounterLinked(tr, pos, counterIsLinked)
+          transformation = setCounterLinked(transformation, pos, counterIsLinked)
         }
       }
 
@@ -186,7 +189,7 @@ function linkOrderedListCounters(tr) {
     return willTraverseNodeChildren
   })
 
-  return tr
+  return transformation
 }
 
 function traverseDocAndFindJointInfo(doc, prevJointInfo) {
@@ -269,10 +272,11 @@ export default function consolidateListNodes(tr) {
     return tr
   }
 
+  let transformation = tr
   let prevJointInfo
 
   // Keep the loop running until there's no more list nodes that can be joined.
-  while (true) {
+  while (true) { /* eslint-disable-line no-constant-condition */
     const jointInfo = traverseDocAndFindJointInfo(tr.doc, prevJointInfo)
 
     if (jointInfo) {
@@ -283,15 +287,15 @@ export default function consolidateListNodes(tr) {
         content,
       } = jointInfo
 
-      tr = tr.delete(deleteFrom, deleteTo)
-      tr = tr.insert(insertAt, content)
+      transformation = transformation.delete(deleteFrom, deleteTo)
+      transformation = transformation.insert(insertAt, content)
       prevJointInfo = jointInfo
     } else {
-      tr = linkOrderedListCounters(tr)
+      transformation = linkOrderedListCounters(transformation)
 
       break
     }
   }
 
-  return tr
+  return transformation
 }
