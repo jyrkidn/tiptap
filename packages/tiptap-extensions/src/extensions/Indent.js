@@ -20,7 +20,8 @@ export default class Indent extends Extension {
 
   get defaultOptions() {
     return {
-      indent: [...Array(MAX_INDENT_LEVEL + 1).keys()],
+      levels: [...Array(MAX_INDENT_LEVEL + 1).keys()],
+      marginSize: INDENT_MARGIN_PT_SIZE,
     }
   }
 
