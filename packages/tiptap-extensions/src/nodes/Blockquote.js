@@ -1,4 +1,9 @@
-import { Node, getParagraphNodeAttrs, getParagraphDOM } from 'tiptap'
+import {
+  Node,
+  getParagraphNodeAttrs,
+  getParagraphDOM,
+  MIN_INDENT_LEVEL,
+} from 'tiptap'
 import { wrappingInputRule, toggleWrap } from 'tiptap-commands'
 
 function getAttrs(dom) {
@@ -23,7 +28,7 @@ export default class Blockquote extends Node {
     return {
       attrs: {
         align: { default: null },
-        indent: { default: null },
+        indent: { default: MIN_INDENT_LEVEL },
       },
       content: 'block*',
       group: 'block',

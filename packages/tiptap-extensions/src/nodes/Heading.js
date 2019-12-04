@@ -1,4 +1,9 @@
-import { Node, getParagraphNodeAttrs, getParagraphDOM } from 'tiptap'
+import {
+  Node,
+  getParagraphNodeAttrs,
+  getParagraphDOM,
+  MIN_INDENT_LEVEL,
+} from 'tiptap'
 import { setBlockType, textblockTypeInputRule, toggleBlockType } from 'tiptap-commands'
 
 function getAttrs(dom) {
@@ -33,7 +38,7 @@ export default class Heading extends Node {
     return {
       attrs: {
         align: { default: null },
-        indent: { default: null },
+        indent: { default: MIN_INDENT_LEVEL },
         level: { default: 1 },
       },
       content: 'inline*',

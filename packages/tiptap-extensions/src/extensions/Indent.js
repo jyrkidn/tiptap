@@ -1,5 +1,9 @@
 import { Extension } from 'tiptap'
-import { MAX_INDENT_LEVEL } from 'tiptap/Utils'
+import {
+  INDENT_MARGIN_PT_SIZE,
+  MIN_INDENT_LEVEL,
+  MAX_INDENT_LEVEL,
+} from 'tiptap/Utils'
 import { updateIndentLevel } from 'tiptap-commands'
 
 export default class Indent extends Extension {
@@ -23,7 +27,7 @@ export default class Indent extends Extension {
   get schema() {
     return {
       attrs: {
-        indent: { default: 0 },
+        indent: { default: MIN_INDENT_LEVEL },
       },
     }
   }
