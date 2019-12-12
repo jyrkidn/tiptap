@@ -89,7 +89,10 @@ test('set HTML, get JSON', () => {
     content: [
       {
         type: 'paragraph',
-        attrs: { align: null },
+        attrs: {
+          align: null,
+          indent: 0,
+        },
         content: [
           {
             type: 'text',
@@ -129,7 +132,10 @@ test('set JSON, get JSON', () => {
     content: [
       {
         type: 'paragraph',
-        attrs: { align: null },
+        attrs: {
+          align: null,
+          indent: 0,
+        },
         content: [
           {
             type: 'text',
@@ -169,7 +175,10 @@ test('set JSON, get HTML', () => {
     content: [
       {
         type: 'paragraph',
-        attrs: { align: null },
+        attrs: {
+          align: null,
+          indent: 0,
+        },
         content: [
           {
             type: 'text',
@@ -224,7 +233,10 @@ test('set content (JSON)', () => {
     content: [
       {
         type: 'paragraph',
-        attrs: { align: null },
+        attrs: {
+          align: null,
+          indent: 0,
+        },
         content: [
           {
             type: 'text',
@@ -271,7 +283,10 @@ test('update callback', done => {
         content: [
           {
             type: 'paragraph',
-            attrs: { align: null },
+            attrs: {
+              align: null,
+              indent: 0,
+            },
             content: [
               {
                 type: 'text',
@@ -298,7 +313,10 @@ test('parse options in set content', done => {
         content: [
           {
             type: 'paragraph',
-            attrs: { align: null },
+            attrs: {
+              align: null,
+              indent: 0,
+            },
             content: [
               {
                 type: 'text',
@@ -327,7 +345,10 @@ test('parse options in constructor', () => {
     content: [
       {
         type: 'paragraph',
-        attrs: { align: null },
+        attrs: {
+          align: null,
+          indent: 0,
+        },
         content: [
           {
             type: 'text',
