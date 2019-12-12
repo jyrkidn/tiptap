@@ -3,9 +3,12 @@ export {
   Extension,
   Node,
   Mark,
-  ALIGN_PATTERN,
   getParagraphNodeAttrs,
   getParagraphDOM,
+  ALIGN_PATTERN,
+  INDENT_MARGIN_PT_SIZE,
+  MIN_INDENT_LEVEL,
+  MAX_INDENT_LEVEL,
 } from './Utils'
 export { Doc, Paragraph, Text } from './Nodes'
 export { default as EditorContent } from './Components/EditorContent'

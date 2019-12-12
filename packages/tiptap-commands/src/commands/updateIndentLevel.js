@@ -5,7 +5,7 @@ import {
   minMax,
   MIN_INDENT_LEVEL,
   MAX_INDENT_LEVEL,
-} from 'tiptap/Utils'
+} from 'tiptap'
 import { nodeEqualsType, nodeIsList, nodeIsTodoList } from 'tiptap-utils'
 
 function setNodeIndentMarkup(tr, pos, delta) {

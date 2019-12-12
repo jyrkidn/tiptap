@@ -1,9 +1,9 @@
-import { Extension } from 'tiptap'
 import {
+  Extension,
   INDENT_MARGIN_PT_SIZE,
   MIN_INDENT_LEVEL,
   MAX_INDENT_LEVEL,
-} from 'tiptap/Utils'
+} from 'tiptap'
 import { updateIndentLevel } from 'tiptap-commands'
 
 export default class Indent extends Extension {
