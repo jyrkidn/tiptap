@@ -12,6 +12,7 @@ export default function getParagraphNodeAttrs(dom) {
   const align = dom.getAttribute('align') || textAlign || ''
   if (align && ALIGN_PATTERN.test(align)) {
     attrs.align = align
+  }
 
   let indent = parseInt(dom.getAttribute(ATTRIBUTE_INDENT), 10)
   if (!indent && marginLeft) {
